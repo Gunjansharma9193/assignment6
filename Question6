@@ -1,0 +1,59 @@
+
+using System;
+using System.Data;
+using System.Data.SqlClient;
+
+class Program
+{
+    static void Main()
+    {
+        // Database connection string
+        string conStr = @"Data Source=.\SQLEXPRESS;
+                          Initial Catalog=CollegeDB;
+                          Integrated Security=True";
+
+        try
+        {
+            // Create SQL connection
+            SqlConnection con = new SqlConnection(conStr);
+
+            // SQL query to retrieve all records
+            string query = "SELECT * FROM Student";
+
+            // Create SqlDataAdapter
+            SqlDataAdapter da = new SqlDataAdapter(query, con);
+
+            // Create DataSet
+            DataSet ds = new DataSet();
+
+            // Fill DataSet with student records
+            da.Fill(ds, "Student");
+
+            // Display all records
+            Console.WriteLine("Student Records:");
+
+            DataTable dt = ds.Tables["Student"];
+
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+                    Console.WriteLine(
+                        "ID: " + row["Id"] +
+                        ", Name: " + row["Name"] +
+                        ", Age: " + row["Age"] +
+                        ", Course: " + row["Course"]
+                    );
+                }
+            }
+            else
+            {
+                Console.WriteLine("No Student Records Found!");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+    }
+}
