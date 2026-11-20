@@ -1,0 +1,71 @@
+
+using System;
+using System.Data;
+using System.Data.SqlClient;
+
+class Program
+{
+    static void Main()
+    {
+        // Database connection string
+        string conStr = @"Data Source=.\SQLEXPRESS;
+                          Initial Catalog=CollegeDB;
+                          Integrated Security=True";
+
+        try
+        {
+            // Create SQL connection
+            SqlConnection con = new SqlConnection(conStr);
+
+            // Select query
+            string query = "SELECT * FROM Student";
+
+            // Create SqlDataAdapter
+            SqlDataAdapter da = new SqlDataAdapter(query, con);
+
+            // Create SqlCommandBuilder
+            SqlCommandBuilder cb = new SqlCommandBuilder(da);
+
+            // Create DataSet
+            DataSet ds = new DataSet();
+
+            // Fill DataSet with records
+            da.Fill(ds, "Student");
+
+            // Get Student DataTable
+            DataTable dt = ds.Tables["Student"];
+
+            // Set primary key
+            dt.PrimaryKey = new DataColumn[]
+            {
+                dt.Columns["Id"]
+            };
+
+            // Accept Student ID
+            Console.Write("Enter Student ID to Delete: ");
+            int id = Convert.ToInt32(Console.ReadLine());
+
+            // Find student record
+            DataRow row = dt.Rows.Find(id);
+
+            if (row != null)
+            {
+                // Delete record from DataSet
+                row.Delete();
+
+                // Save changes to database
+                da.Update(ds, "Student");
+
+                Console.WriteLine("Student Record Deleted Successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Student ID Not Found!");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+    }
+}
