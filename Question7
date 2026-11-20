@@ -1,0 +1,9 @@
+da.Fill(ds, "Student");
+
+dt.PrimaryKey = new DataColumn[] { dt.Columns["Id"] };
+
+DataRow row = dt.Rows.Find(id);
+
+row["Name"] = name;
+
+da.Update(ds, "Student");
