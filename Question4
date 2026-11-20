@@ -1,0 +1,58 @@
+
+using System;
+using System.Data.SqlClient;
+
+class Program
+{
+    static void Main()
+    {
+        // Database connection string
+        string conStr = @"Data Source=.\SQLEXPRESS;
+                          Initial Catalog=CollegeDB;
+                          Integrated Security=True";
+
+        SqlConnection con = new SqlConnection(conStr);
+
+        try
+        {
+            // Open database connection
+            con.Open();
+
+            Console.WriteLine("Database Connected Successfully!");
+
+            // Accept Student ID
+            Console.Write("Enter Student ID to Delete: ");
+            int id = Convert.ToInt32(Console.ReadLine());
+
+            // Delete query
+            string query = "DELETE FROM Student WHERE Id = @Id";
+
+            // Create SqlCommand
+            SqlCommand cmd = new SqlCommand(query, con);
+
+            // Add parameter
+            cmd.Parameters.AddWithValue("@Id", id);
+
+            // Execute delete query
+            int result = cmd.ExecuteNonQuery();
+
+            if (result > 0)
+            {
+                Console.WriteLine("Student Record Deleted Successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Student ID Not Found!");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+        finally
+        {
+            // Close database connection
+            con.Close();
+        }
+    }
+}
